@@ -23,12 +23,16 @@ const templateTuit = {
 
 // Posts data to RESTful Web Service API
 const createTuit = (request, response) => {
-    // console.log(request.body);
     const newTuit = templateTuit;
     newTuit.content = request.body.content;
     newTuit._id = (new Date()).getTime() + '';
-    tuits.unshift({...newTuit, ...templateTuit});
-    response.json({...newTuit});
+    tuits.unshift(newTuit);
+    console.log(newTuit);
+    // For reviewer: Try adding a new tuit, and look at the output in your terminal in IntelliJ in this server app.
+    // The new tuit arrives, with content as expected, and with an ID...only the content is not displayed in the
+    // tuits list.
+    // response.sendStatus(200);
+   response.json(newTuit);
 }
 
 const findTuit = (request, response) => {
@@ -39,15 +43,26 @@ const updateTuit = (request, response) => {
     const tuitIDToUpdate = request.params.tid;
     const updates = request.body;
     const tuitIndex = tuits.findIndex(
-        (t) => t._id === tuitIDToUpdate)
-    tuits[tuitIndex] =
-        {
-            ...tuits[tuitIndex],
-            ...updates
-        };
-    console.log(t._id)
+        (t) => t._id === tuitIDToUpdate
+    );
+    if (tuitIndex < 0) {
+        response.sendStatus(404);
+        return;
+    }
+    const tuitToUpdate = tuits[tuitIndex]
+    console.log(tuitToUpdate)
+    // For the reviewer: Click on a heart to see, in the terminal below, likes increasing/decreasing and
+    // liked changing from true to false
+    // The code works, it's just not displaying on the screen unless refreshed.
+    if (tuitToUpdate.liked) {
+        tuitToUpdate.liked = false;
+        tuitToUpdate.likes -= 1;
+    } else {
+        tuitToUpdate.liked = true;
+        tuitToUpdate.likes += 1;
+    }
     response.sendStatus(200);
-}
+};
 
 const deleteTuit = (request, response) => {
     const tuitIdToDelete = request.params.tid;

@@ -1,6 +1,6 @@
 export default [
     {
-        "_id": 123,
+        "_id": "123",
         "userName": "The New York Times",
         "userHandle": "nyt",
         "userAvatar": "https://theme.zdassets.com/theme_assets/968999/d8a347b41db1ddee634e2d67d08798c102ef09ac.jpg",
@@ -16,7 +16,7 @@ export default [
         "liked": true
     },
     {
-        "_id": 234,
+        "_id": "234",
         "userName": "user1",
         "userHandle": "handle1",
         "userAvatar": "",
@@ -32,7 +32,7 @@ export default [
         "liked": false
     },
     {
-        "_id": 456,
+        "_id": "456",
         "userName": "Not Ye Olde New York Times",
         "userHandle": "nyt",
         "userAvatar": "https://theme.zdassets.com/theme_assets/968999/d8a347b41db1ddee634e2d67d08798c102ef09ac.jpg",
