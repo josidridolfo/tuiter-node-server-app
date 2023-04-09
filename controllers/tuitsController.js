@@ -1,5 +1,6 @@
-import posts from "../data/tuits.js";
-let tuits = posts;
+import * as tuitsDao from '../tuits/tuits-dao.js'
+// import posts from "../data/tuits.js";
+// let tuits = posts;
 
 const currentUser = {
     "userName": "NASA",
@@ -22,53 +23,54 @@ const templateTuit = {
 };
 
 // Posts data to RESTful Web Service API
-const createTuit = (request, response) => {
+const createTuit = async (request, response) => {
     const newTuit = templateTuit;
     newTuit.content = request.body.content;
-    newTuit._id = (new Date()).getTime() + '';
-    tuits.unshift(newTuit);
-    console.log(newTuit);
-    // For reviewer: Try adding a new tuit, and look at the output in your terminal in IntelliJ in this server app.
-    // The new tuit arrives, with content as expected, and with an ID...only the content is not displayed in the
-    // tuits list.
-    // response.sendStatus(200);
-   response.json(newTuit);
+    newTuit.likes = 0;
+    newTuit.liked = false;
+    const insertedTuit = await
+        tuitsDao.createTuit(newTuit);
+   response.json(insertedTuit);
 }
 
-const findTuit = (request, response) => {
+const findTuit = async (request, response) => {
+    const tuits = await tuitsDao.findTuits()
     response.json(tuits);
 }
 
-const updateTuit = (request, response) => {
+const updateTuit = async (request, response) => {
     const tuitIDToUpdate = request.params.tid;
     const updates = request.body;
-    const tuitIndex = tuits.findIndex(
-        (t) => t._id === tuitIDToUpdate
-    );
-    if (tuitIndex < 0) {
-        response.sendStatus(404);
-        return;
-    }
-    const tuitToUpdate = tuits[tuitIndex]
-    console.log(tuitToUpdate)
-    // For the reviewer: Click on a heart to see, in the terminal below, likes increasing/decreasing and
-    // liked changing from true to false
-    // The code works, it's just not displaying on the screen unless refreshed.
-    if (tuitToUpdate.liked) {
-        tuitToUpdate.liked = false;
-        tuitToUpdate.likes -= 1;
-    } else {
-        tuitToUpdate.liked = true;
-        tuitToUpdate.likes += 1;
-    }
-    response.sendStatus(200);
+    // const tuitIndex = tuits.findIndex(
+    //     (t) => t._id === tuitIDToUpdate
+    // );
+    // if (tuitIndex < 0) {
+    //     response.sendStatus(404);
+    //     return;
+    // }
+    // const tuitToUpdate = tuits[tuitIndex]
+    // console.log(tuitToUpdate)
+    // // For the reviewer: Click on a heart to see, in the terminal below, likes increasing/decreasing and
+    // // liked changing from true to false
+    // // The code works, it's just not displaying on the screen unless refreshed.
+    // if (tuitToUpdate.liked) {
+    //     tuitToUpdate.liked = false;
+    //     tuitToUpdate.likes -= 1;
+    // } else {
+    //     tuitToUpdate.liked = true;
+    //     tuitToUpdate.likes += 1;
+    // }
+    const status =
+        await tuitsDao.updateTuit(
+            tuitIDToUpdate, updates)
+    response.json(status);
 };
 
-const deleteTuit = (request, response) => {
+const deleteTuit = async (request, response) => {
     const tuitIdToDelete = request.params.tid;
-    tuits = tuits.filter((t) =>
-        t._id !== tuitIdToDelete);
-    response.sendStatus(200);
+    const status =
+        await tuitsDao.deleteTuit(tuitIdToDelete);
+    response.json(status);
 }
 
 export default (app) => {
