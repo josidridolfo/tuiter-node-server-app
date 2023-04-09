@@ -10,6 +10,6 @@ app.use(express.json());
 HelloController(app);
 UserController(app);
 TuitsController(app);
-const CONNECTION_STRING = process.env.DB_CONNECTION_STRING || 'mongodb://127.0.0.1:27017/tuiter'
+const CONNECTION_STRING = process.env.DB_CONNECTION_STRING || 'https://tuiter-node-service.onrender.com/tuiter'
 mongoose.connect(CONNECTION_STRING);
 app.listen(process.env.PORT || 4000);
